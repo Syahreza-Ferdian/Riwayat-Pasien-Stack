@@ -21,23 +21,21 @@ public class stack {
     static Stack<String> undoRedoHistory = new Stack<>();
 
     public static void main(String[] args) {
-        //TODO : BUAT MENU UNTUK MENGHAPUS TEKS RIWAYAT YANG DIMASUKKAN (CLEAR)
-
         Scanner input = new Scanner(System.in);
 
         mainMenuInput : while(true) {
             System.out.printf("\n%s>>> Main Menu <<<%s\n", ANSI_CYAN_COLOR, ANSI_RESET);
-            System.out.println("1. Masukkan riwayat pasien\n2. Lihat riwayat pasien\n3. Keluar program");
+            System.out.println("1. Masukkan riwayat pasien\n2. Lihat riwayat pasien\n3. Hapus riwayat pasien\n4. Keluar program");
             System.out.print("Masukkan input: ");
             int menuChoice;
     
             try {
                 menuChoice = input.nextInt();
-                if(menuChoice <= 0 || menuChoice > 3) throw new InputMismatchException();
+                if(menuChoice <= 0 || menuChoice > 4) throw new InputMismatchException();
                 input.nextLine();
             } catch (InputMismatchException e) {
                 input.nextLine();
-                System.out.printf("\n%s%sERROR: Input harus berupa angka 1-3!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                System.out.printf("\n%s%sERROR: Input harus berupa angka 1-4!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
                 continue;
             }
 
@@ -68,10 +66,45 @@ public class stack {
                     break;
 
                 case 2 :
-                    System.out.printf("\nRiwayat pasien tersebut adalah:\n%s\n", data);
+                    try {
+                        if(data.isEmpty()) throw new EmptyStackException();
+                        System.out.printf("\nRiwayat pasien tersebut adalah:\n%s\n", data);
+                    } catch(EmptyStackException e) {
+                        System.out.printf("\n%s%sERROR: Belum ada riwayat pasien yang dimasukkan!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                    }
+
                     break;
-                    
+
                 case 3 : 
+                    char yesOrNo;
+
+                    try {
+                        if(data.isEmpty()) throw new EmptyStackException();
+                        System.out.print("Apakah anda yakin ingin menghapus riwayat pasien? (Y/N): ");
+                        yesOrNo = input.nextLine().toLowerCase().charAt(0);
+                        if(!(yesOrNo == 'y' || yesOrNo == 'n')) throw new InputMismatchException();
+
+                    } catch(InputMismatchException e) {
+                        System.out.printf("\n%s%sERROR: Input harus berupa karakter Y atau N!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                        continue;
+                        
+                    } catch(EmptyStackException e) {
+                        System.out.printf("\n%s%sERROR: Belum ada riwayat pasien yang dimasukkan!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                        continue;
+                    }
+                    
+                    switch(yesOrNo) {
+                        case 'y' : 
+                            data.removeAllElements();
+                            undoRedoHistory.removeAllElements();
+                            System.out.printf("\n%s%sUSERINFO: Data pasien tersebut telah berhasil dihapus!%s\n", ANSI_GREEN_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                            break;
+                        case 'n' :
+                            continue mainMenuInput;
+                    }
+
+                    break;
+                case 4 : 
                     System.out.printf("\n%s%sUSERINFO: Program dihentikan. Terima kasih :)%s\n", ANSI_YELLOW_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
                     break mainMenuInput;
             }
