@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.Stack;
+import java.util.EmptyStackException;
+import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class stack {
     static final String ANSI_BLUE_COLOR = "\033[0;34m";
@@ -41,8 +44,35 @@ public class stack {
 
             switch(menuChoice) {
                 case 1 : 
+                    if(!data.isEmpty()) {
+                        System.out.printf("\n%s%sWARNING: Sudah ada data riwayat pasien yang dimasukkan%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                        boolean stopLoop = false;
+
+                        char inputChoice = ' ';
+                        while(!stopLoop) {
+                            System.out.print("Apakah anda ingin meng-override data riwayat pasien sebelumnya? (Y/N): ");
+                            
+                            try {
+                                inputChoice = input.nextLine().toLowerCase().charAt(0);
+                                if(!(inputChoice == 'y' || inputChoice == 'n')) throw new InputMismatchException();
+                                stopLoop = true;
+                            } catch (InputMismatchException e) {
+                                System.out.printf("\n%s%sERROR: Input hanya bisa berupa karakter Y atau N!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                            }
+                        }
+
+                        switch(inputChoice) {
+                            case 'y':
+                                System.out.printf("\n%s%sUSERINFO: Riwayat pasien telah berhasil dihapus. Sekarang anda dapat memasukkan riwayat baru%s\n", ANSI_GREEN_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                                data.removeAllElements();
+                                undoRedoHistory.removeAllElements();
+                                break;
+                            case 'n': break; //do nothing
+                        }
+                    }
+                        
                     inputText: while(true) {
-                        System.out.printf("\n\n%sMasukkan teks riwayat pasien%s\n", ANSI_BLUE_COLOR, ANSI_RESET);
+                        System.out.printf("\n%sMasukkan teks riwayat pasien%s\n", ANSI_BLUE_COLOR, ANSI_RESET);
                         System.out.println("HINT: Input 'z' untuk undo, 'y' untuk redo, 's' untuk save.");
                         System.out.print("Input something: ");
                         String inputan[] = input.nextLine().split("\s");
@@ -72,17 +102,16 @@ public class stack {
                     } catch(EmptyStackException e) {
                         System.out.printf("\n%s%sERROR: Belum ada riwayat pasien yang dimasukkan!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
                     }
-
                     break;
 
                 case 3 : 
-                    char yesOrNo;
+                    char confirm;
 
                     try {
                         if(data.isEmpty()) throw new EmptyStackException();
                         System.out.print("Apakah anda yakin ingin menghapus riwayat pasien? (Y/N): ");
-                        yesOrNo = input.nextLine().toLowerCase().charAt(0);
-                        if(!(yesOrNo == 'y' || yesOrNo == 'n')) throw new InputMismatchException();
+                        confirm = input.nextLine().toLowerCase().charAt(0);
+                        if(!(confirm == 'y' || confirm == 'n')) throw new InputMismatchException();
 
                     } catch(InputMismatchException e) {
                         System.out.printf("\n%s%sERROR: Input harus berupa karakter Y atau N!%s\n", ANSI_RED_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
@@ -93,7 +122,7 @@ public class stack {
                         continue;
                     }
                     
-                    switch(yesOrNo) {
+                    switch(confirm) {
                         case 'y' : 
                             data.removeAllElements();
                             undoRedoHistory.removeAllElements();
@@ -102,8 +131,8 @@ public class stack {
                         case 'n' :
                             continue mainMenuInput;
                     }
-
                     break;
+
                 case 4 : 
                     System.out.printf("\n%s%sUSERINFO: Program dihentikan. Terima kasih :)%s\n", ANSI_YELLOW_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
                     break mainMenuInput;
@@ -146,6 +175,20 @@ MAIN MENU:
         Masukkan kalimat (input z untuk undo, y untuk redo, s untuk save).
 
 2. Lihat riwayat pasien
-3. Keluar program
+    - tampilin pesan error apabila belum ada riwayat pasien yg dimasukin
 
+3. Hapus riwayat pasien
+    - tampilin pesan apabila belum ada riwayat pasien yg dimasukin
+    - tampil konfirmasi beneran hapus apa engga
+        - beneran hapus -> data.removeAllElements, undoRedoHistory.removeAllElements
+        - tidak -> balik ke main menu
+
+4. Keluar program
+
+
+Input 1 behaviour
+1. Masukkan riwayat pasien
+    - apabila sudah ada ada, tampilkan konfirmasi ingin di override atau tidak.
+       - override : data.removeAllElements, undoRedoHistory.removeAllElements --> data yg lama dihapus, tar masukin baru lagi
+       - Tidak : langsung masukin selanjutnya --> data yg lama masih ada, jadi kalau masukin baru tar automatis ketambah di elemen berikutnya
  */
