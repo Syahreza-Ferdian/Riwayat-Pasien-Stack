@@ -50,7 +50,7 @@ public class stack {
 
                         char inputChoice = ' ';
                         while(!stopLoop) {
-                            System.out.print("Apakah anda ingin meng-override data riwayat pasien sebelumnya? (Y/N): ");
+                            System.out.print("Apakah Anda ingin meng-override data riwayat pasien sebelumnya? (Y/N): ");
                             
                             try {
                                 inputChoice = input.nextLine().toLowerCase().charAt(0);
@@ -63,7 +63,7 @@ public class stack {
 
                         switch(inputChoice) {
                             case 'y':
-                                System.out.printf("\n%s%sUSERINFO: Riwayat pasien telah berhasil dihapus. Sekarang anda dapat memasukkan riwayat baru%s\n", ANSI_GREEN_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
+                                System.out.printf("\n%s%sUSERINFO: Riwayat pasien telah berhasil dihapus. Sekarang Anda dapat memasukkan riwayat baru%s\n", ANSI_GREEN_BACKGROUND, ANSI_WHITE_BOLD, ANSI_RESET);
                                 data.removeAllElements();
                                 undoRedoHistory.removeAllElements();
                                 break;
@@ -109,7 +109,7 @@ public class stack {
 
                     try {
                         if(data.isEmpty()) throw new EmptyStackException();
-                        System.out.print("Apakah anda yakin ingin menghapus riwayat pasien? (Y/N): ");
+                        System.out.print("Apakah Anda yakin ingin menghapus riwayat pasien? (Y/N): ");
                         confirm = input.nextLine().toLowerCase().charAt(0);
                         if(!(confirm == 'y' || confirm == 'n')) throw new InputMismatchException();
 
@@ -168,7 +168,7 @@ public class stack {
 
 
 /*
-Initial design flaw
+Initial design flow
 MAIN MENU: 
 1. Masukkan riwayat pasien
     'output text goes like this'
